@@ -1,16 +1,8 @@
-# build_for_india
+# Master Yogi
 
-A new Flutter project.
+A small working prototype for assisting the yoga practice developed for Build for Digital India, where the current Asana will be predicted..with a decent Accuracy..and the instructions for next one will be given..in text format along with the audio.
 
-## Getting Started
+This app is developed using Flutter and integrated with the Machine Learning model which predicts the Asanas.
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Machine Learning model developed by [Neha Duggirala](https://github.com/neha-duggirala)
