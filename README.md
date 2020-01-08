@@ -4,7 +4,7 @@ A small working prototype for assisting the yoga practice developed as a part of
 
 This app is developed using Flutter and integrated with the Machine Learning model which predicts the Asanas.
 
-You can find the working prototype [here.](https://youtu.be/9ssw8qdaxAI)
+You can find the working prototype [here.](https://youtu.be/WQynHhOKlqw)
 
 Machine Learning model developed by [Neha Duggirala](https://github.com/neha-duggirala).
 
