@@ -26,6 +26,9 @@ dependencies:
   tflite:
   image_picker:
   flutter_text_to_speech: ^3.0.7
+  google_fonts: ^0.2.0
+  shared_preferences: ^0.5.6
+  tutorial_coach_mark: ^0.3.0
 
 
 dev_dependencies:
@@ -48,6 +51,8 @@ flutter:
   assets:
     - assets/labels.txt
     - assets/virtual_assistant.tflite
+    - assets/logo.png
+    - assets/hd_logo.jpeg
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
 

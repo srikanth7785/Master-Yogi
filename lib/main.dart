@@ -5,17 +5,34 @@ import 'dart:io';
 import 'package:build_for_india/Instructions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_text_to_speech/flutter_text_to_speech.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import './ShowTutorial.dart';
 
+bool _imageChoosen;
 
-void main()
+void main() async
 {
+  WidgetsFlutterBinding.ensureInitialized();
+  _imageChoosen = false;
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  final initialvisit = sharedPreferences.getInt("initialvisit") ?? 0;
   runApp(
     MaterialApp(
       title: 'Build for Digital India',
-      showSemanticsDebugger: false,
-      home: BuildforIndia(),
+      theme: ThemeData(
+        primaryColor: Colors.orangeAccent,
+        buttonTheme: ButtonThemeData(
+          shape: BeveledRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(7)),
+          ),
+          buttonColor: Colors.orangeAccent,
+        )
+      ),
+      debugShowCheckedModeBanner: false,
+      home: initialvisit == 0 ? Tutorial() : BuildforIndia(),
     ),
   );
 }
@@ -122,19 +139,6 @@ class _BuildforIndiaState extends State<BuildforIndia> {
 
     print("\n\nposenumber: $posenumber\n\n");
 
-    // posenumber = posenumber == 8 ? 1 : posenumber + 1;
-    // var b = instruction.ins[posenumber.toString()];
-    // String msg = '';
-    // displayInstructions = '';
-    // for (var x in b){
-    //   msg = msg + x + '\n';
-    //   // displayInstructions = displayInstructions + x + '\n\n';
-    // }
-
-    // displayInstructions = displayInstructions.substring(0,displayInstructions.length-2);
-
-    // displayInstructions = displayInstructions + msg;
-
     displayInstructions = '';
 
     displayInstructions = displayInstructions + instruction.ins[posenumber.toString()];
@@ -155,6 +159,17 @@ class _BuildforIndiaState extends State<BuildforIndia> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: ()async{
+              SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+              sharedPreferences.setInt("initialvisit", 0);
+            },
+          ),
+        ],
+        elevation: 0.0,
+        // backgroundColor: Colors.orangeAccent,
         title: Text("Virtual Yoga Assistant"),
         centerTitle: true,
       ),
@@ -164,44 +179,78 @@ class _BuildforIndiaState extends State<BuildforIndia> {
           children: <Widget>[
             _load ? Container(alignment: Alignment.center,child: CircularProgressIndicator(),)
               : Container(
-                width: size.width*0.9,
-                height: size.height*0.7,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    _imageChoosen ? Container(): Container(color:Colors.green, child: Image.asset("assets/hd_logo.jpeg", fit: BoxFit.fill, height: size.height * 0.5, width: size.width * 0.8)),
+                    SizedBox(height: 10),
+                    _imageChoosen ? Container() : Container(
+                      child :Center(
+                        child: Text("\nWelcome to Master Yogi..!",
+                          style: TextStyle(
+                            fontSize: 25.0,
+                            shadows: <Shadow>[
+                              Shadow(
+                                offset: Offset(2,2),
+                                blurRadius: 4.0,
+                                color: Colors.green,
+                              ),
+                            ]
+                          ),  
+                        ),
+                      )),
+                    _imageChoosen ? Container() : Container(child: Text("\nYour Personal Virtual Yoga Assistant.",style: GoogleFonts.pTMono(fontSize: 11.0,fontWeight: FontWeight.w100))),
+
+                    _imageChoosen ? Container() : Center(child: Text("\n\nAn optimized application created for and by yoga enthusiasts that gives a hassle-free experience, by keeping user's needs in mind.",textAlign: TextAlign.justify,style: GoogleFonts.mcLaren(fontSize: 12.0,fontWeight: FontWeight.w100))),
+
                     Center(
                       child: _pic != null ? Image.file(_pic,width: size.width*0.6,) : Container(),
                     ),
                     SizedBox(height: 10),
-                    _result == null ? Container()
-                          : Container(
-                            // color: Colors.green,
-                            height:MediaQuery.of(context).size.height * 0.3,
-                          // child: ListView(children:<Widget>[ Center(child: Text("$_pose\n\nConfidence: $_confidence\n\n$displayInstructions"))])),
-                          child: ListView(children:<Widget>[ Center(child: Text("\n$displayInstructions"))])),
-                  ],
+                    _result == null ? Container() : Text("\n$displayInstructions")
+                    ],
                 ),
               )
           ],
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            RaisedButton(
-              child: Text("Gallery"),
-              onPressed: chooseImagefromGallery,
-            ),
+      bottomNavigationBar: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              RaisedButton.icon(
+                shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(2))
+                ),
+                icon: Icon(Icons.photo),
+                label: Text("Gallery"),
+                onPressed:(){
+                  setState(() {
+                    _imageChoosen = true;
+                  });
+                  chooseImagefromGallery();
+                },
+              ),
 
-            RaisedButton(
-              child: Text("Camera"),
-              onPressed: chooseImagefromCamera,
-            ),
-          ],
+              RaisedButton.icon(
+                shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(2))
+                ),
+                icon: Icon(Icons.photo_camera),
+                label: Text("Camera"),
+                onPressed: (){
+                  setState(() {
+                    _imageChoosen = true;
+                  });
+                  chooseImagefromCamera();
+                }
+              ),
+            ],
+          ),
         ),
       ),
     );
